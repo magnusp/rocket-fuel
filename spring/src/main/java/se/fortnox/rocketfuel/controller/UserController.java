@@ -1,7 +1,11 @@
-package se.fortnox.rocketfuel.api;
+package se.fortnox.rocketfuel.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import se.fortnox.rocketfuel.api.User;
+import se.fortnox.rocketfuel.api.UserResource;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,7 +33,13 @@ public class UserController implements UserResource {
 
     @Override
     public Mono<User> signIn(@NotNull String authorizationToken) {
-        return Mono.error(new UnsupportedOperationException());
+
+        return ReactiveSecurityContextHolder
+            .getContext()
+            .map(securityContext -> {
+                Authentication authentication = securityContext.getAuthentication();
+                return new User();
+            });
     }
 
     @Override

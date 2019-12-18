@@ -1,7 +1,9 @@
-package se.fortnox.rocketfuel.api;
+package se.fortnox.rocketfuel.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import se.fortnox.rocketfuel.api.Question;
+import se.fortnox.rocketfuel.api.QuestionResource;
 
 import java.util.List;
 
