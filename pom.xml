@@ -12,6 +12,7 @@
         <module>spec</module>
         <module>ui</module>
         <module>report</module>
+        <module>spring</module>
     </modules>
 
     <properties>
