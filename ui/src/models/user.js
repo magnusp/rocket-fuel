@@ -10,10 +10,10 @@ export function getUser(id) {
 
 export function signIn(token) {
     const options = {
-        url: '/api/users/authenticate/',
+        url: '/api/users/authenticate',
         method: 'POST',
         headers: {
-            authorizationToken: token
+            authorization: `Bearer ${token}`
         }
     };
 

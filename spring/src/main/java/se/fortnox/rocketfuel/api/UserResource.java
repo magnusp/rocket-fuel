@@ -5,14 +5,13 @@
  import org.springframework.web.bind.annotation.PathVariable;
  import org.springframework.web.bind.annotation.PostMapping;
  import org.springframework.web.bind.annotation.RequestAttribute;
- import org.springframework.web.bind.annotation.RequestHeader;
  import org.springframework.web.bind.annotation.RequestMapping;
  import org.springframework.web.bind.annotation.RequestParam;
  import reactor.core.publisher.Mono;
 
  import javax.validation.constraints.NotNull;
 
- @RequestMapping(path="api")
+ @RequestMapping(path="/api/users")
  public interface UserResource {
 
      /**
@@ -57,7 +56,7 @@
       * @return a application token as a jwt
       */
      @PostMapping("authenticate")
-     Mono<User> signIn(@RequestHeader @NotNull String authorizationToken, @RequestAttribute("foo") User requestAttribute);
+     Mono<User> signIn(@RequestAttribute("foo") User requestAttribute);
 
      /**
       * Signs out the user by telling client that the cookie shall be removed and is invalid.
