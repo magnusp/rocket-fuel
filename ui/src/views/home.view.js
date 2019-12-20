@@ -1,8 +1,8 @@
 import React from 'react';
-import { t } from 'ttag';
+import {t} from 'ttag';
 import Loader from '../components/utils/loader';
 import QuestionRow from '../components/questions/questionrow';
-import { UserContext } from '../usercontext';
+import {UserContext} from '../usercontext';
 import * as Question from '../models/question';
 
 class HomeView extends React.Component {
@@ -19,7 +19,7 @@ class HomeView extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchQuestions();
+        //this.fetchQuestions();
     }
 
     fetchQuestions() {

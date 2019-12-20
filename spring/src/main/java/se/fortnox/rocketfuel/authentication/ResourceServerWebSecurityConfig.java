@@ -6,6 +6,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -13,90 +16,30 @@ import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
+import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity // Enables use of @PreAuthorize
 public class ResourceServerWebSecurityConfig {
-    @Bean
-    @Order(2)
-    public SecurityWebFilterChain securitygWebFilterChain(ServerHttpSecurity http) {
-        return http
-            /*.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
-                .jwt(withDefaults())
-            )*/
-
-
-            .authorizeExchange(exchange -> exchange.pathMatchers("/api/authenticate").authenticated())
-
-            .build();
-
-        /*return http
-            .exceptionHandling()
-            .authenticationEntryPoint((swe, e) -> {
-                return Mono.fromRunnable(() -> {
-                    swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                });
-            }).accessDeniedHandler((swe, e) -> {
-                return Mono.fromRunnable(() -> {
-                    swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-                });
-            }).and()
-            .csrf().disable()
-            .formLogin().disable()
-            .httpBasic().disable()
-            .authenticationManager(authenticationManager)
-            .securityContextRepository(securityContextRepository)
-            .authorizeExchange()
-            .pathMatchers(HttpMethod.OPTIONS).permitAll()
-            .pathMatchers("/api/authenticate").permitAll()
-            .anyExchange().authenticated()
-            .and().build();*/
-    }
 
     @Bean
-    @Order(1)
-    public SecurityWebFilterChain sessionSecurityWebFilterChain(ServerHttpSecurity http) {
-        return http
-            .csrf().disable()
-            .authorizeExchange()
-            .pathMatchers("/api/users/**").authenticated()
-            .and()
-            .httpBasic()
-
-
-            .authenticationManager(authentication -> {
-
-                return Mono.just(new UsernamePasswordAuthenticationToken("alice", "some-credential"));
-            })
-            .and()
-            .build();
-
-        /*return http
-            .exceptionHandling()
-            .authenticationEntryPoint((swe, e) -> {
-                return Mono.fromRunnable(() -> {
-                    swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                });
-            }).accessDeniedHandler((swe, e) -> {
-                return Mono.fromRunnable(() -> {
-                    swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-                });
-            }).and()
-            .csrf().disable()
-            .formLogin().disable()
-            .httpBasic().disable()
-            .authenticationManager(authenticationManager)
-            .securityContextRepository(securityContextRepository)
-            .authorizeExchange()
-            .pathMatchers(HttpMethod.OPTIONS).permitAll()
-            .pathMatchers("/api/authenticate").permitAll()
-            .anyExchange().authenticated()
-            .and().build();*/
+    public UserDetailsService userDetailsService() throws Exception {
+        // ensure the passwords are encoded properly
+        UserBuilder users = User.withDefaultPasswordEncoder();
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(users.username("user").password("password").roles("USER").build());
+        manager.createUser(users.username("admin").password("password").roles("USER","ADMIN").build());
+        return manager;
     }
 
     @Bean
@@ -116,4 +59,50 @@ public class ResourceServerWebSecurityConfig {
 
         return jwtDecoder;
     }
+
+    @Bean
+    @Order(1)
+    public SecurityWebFilterChain first(ServerHttpSecurity http) {
+        return http
+            .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/api/users/authenticate"))
+            .requestCache().requestCache(NoOpServerRequestCache.getInstance())
+            .and()
+            .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                .jwt(withDefaults())
+            )
+            .httpBasic().disable()
+            .formLogin().disable()
+            .csrf().disable()
+            .logout().disable()
+            .authorizeExchange()
+            .anyExchange()
+            .authenticated()
+            .and()
+            .build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityWebFilterChain second(ServerHttpSecurity http) {
+        return http
+            .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"))
+            .requestCache().requestCache(NoOpServerRequestCache.getInstance())
+            .and()
+            .httpBasic().disable()
+            .formLogin().disable()
+            .csrf().disable()
+            .logout().disable()
+
+
+            .securityContextRepository(new WebSessionServerSecurityContextRepository())
+            .authenticationManager(authentication -> {
+                return Mono.just(new UsernamePasswordAuthenticationToken("alice", "some-credential"));
+            })
+            .authorizeExchange()
+            .anyExchange()
+            .authenticated()
+            .and()
+            .build();
+    }
+
 }

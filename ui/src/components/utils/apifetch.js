@@ -26,7 +26,7 @@ function ApiFetch(options = {}, tryCount = 0) {
     };
 
     if (!options.body) {
-        fetchOptions.headers['Content-Type'] = 'text/plain';
+        //fetchOptions.headers['Content-Type'] = 'application/json';
         delete fetchOptions.body;
     }
 

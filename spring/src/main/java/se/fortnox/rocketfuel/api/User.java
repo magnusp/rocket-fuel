@@ -2,7 +2,10 @@
 
  import com.fasterxml.jackson.annotation.JsonIgnore;
 
- public class User {
+ import java.io.Serializable;
+ import java.security.Principal;
+
+ public class User implements Principal, Serializable {
 
     private Long id;
 
