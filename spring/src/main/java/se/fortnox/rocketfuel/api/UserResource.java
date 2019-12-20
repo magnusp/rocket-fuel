@@ -6,7 +6,7 @@
  import org.springframework.web.bind.annotation.PostMapping;
  import org.springframework.web.bind.annotation.RequestMapping;
  import org.springframework.web.bind.annotation.RequestParam;
- import org.springframework.web.server.WebSession;
+ import org.springframework.web.server.ServerWebExchange;
  import reactor.core.publisher.Mono;
 
  import javax.validation.constraints.NotNull;
@@ -57,7 +57,7 @@
       * @return a application token as a jwt
       */
      @PostMapping("authenticate")
-     Mono<User> signIn(WebSession session);
+     Mono<User> signIn(ServerWebExchange exchange);
 
      /**
       * Signs out the user by telling client that the cookie shall be removed and is invalid.

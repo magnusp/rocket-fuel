@@ -1,30 +1,34 @@
 package se.fortnox.rocketfuel.authentication;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.http.HttpCookie;
-import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import org.springframework.web.server.session.WebSessionManager;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import se.fortnox.rocketfuel.api.User;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Base64;
-
-import static java.nio.charset.StandardCharsets.US_ASCII;
+import java.util.List;
 
 @Component("webSessionManager")
 public class StatelessWebSessionManager implements WebSessionManager {
     private Clock clock = Clock.system(ZoneId.of("GMT"));
+    private static final List<SimpleGrantedAuthority> DEFAULT_GRANTED_AUTHORITIES = List.of(new SimpleGrantedAuthority("User"));
 
     @Override
     public Mono<WebSession> getSession(ServerWebExchange exchange) {
@@ -34,24 +38,7 @@ public class StatelessWebSessionManager implements WebSessionManager {
     }
 
     private Mono<Void> save(ServerWebExchange exchange, WebSession session) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        try {
-            new ObjectOutputStream(baos).writeObject(session);
-        } catch (IOException e) {
-            return Mono.error(e);
-        }
-
-        String serialized = Base64.getUrlEncoder().encodeToString(baos.toByteArray());
-        serialized = URLEncoder.encode(serialized, US_ASCII).substring(0, serialized.length()-10);
-        ResponseCookie responseCookie = ResponseCookie
-            .from("SESSION", serialized)
-            .build();
-        exchange
-            .getResponse()
-            .addCookie(responseCookie);
         return Mono.empty();
-        //return Mono.empty(); // implement session serialization to cookie
     }
 
     private Mono<WebSession> createWebSession() {
@@ -65,22 +52,51 @@ public class StatelessWebSessionManager implements WebSessionManager {
     }
 
     private Mono<WebSession> retrieveSession(ServerWebExchange exchange) {
-        HttpCookie httpCookie = exchange.getRequest().getCookies().getFirst("SESSION");
-        if(httpCookie == null) {
-            return Mono.empty(); // Implement decoding from exchange
+        HttpCookie httpCookie = exchange.getRequest().getCookies().getFirst("applicationToken");
+        StatelessWebSession statelessWebSession = new StatelessWebSession(clock.instant());
+        if (httpCookie == null || httpCookie.getValue().equals("value")) {
+            return Mono.just(statelessWebSession);
         }
-        if(httpCookie.getValue().equals("value")) {
-            return Mono.just(new StatelessWebSession(clock.instant()));
-        }
-        try {
-            byte[] serializedSession = Base64.getUrlDecoder().decode(httpCookie.getValue().replaceAll("\"", ""));
-            ByteArrayInputStream bi = new ByteArrayInputStream(serializedSession);
 
-            ObjectInputStream si = new ObjectInputStream(bi);
-            return Mono.just((StatelessWebSession) si.readObject());
-        } catch (IOException | ClassNotFoundException e) {
-            return Mono.just(new StatelessWebSession(clock.instant()));
+        // Generate random 256-bit (32-byte) shared secret
+        byte[] sharedSecret = "a really long secret quzbar a really long secret quzbar a really long secret quzbar".getBytes(StandardCharsets.UTF_8);
+
+        // Create HMAC signer
+        SignedJWT signedJWT;
+        String name;
+        String email;
+        String picture;
+        Long userId;
+        try {
+            signedJWT = SignedJWT.parse(httpCookie.getValue());
+
+            JWSVerifier verifier = new MACVerifier(sharedSecret);
+            signedJWT.verify(verifier);
+            JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
+            name = jwtClaimsSet.getStringClaim("name");
+            email = jwtClaimsSet.getStringClaim("email");
+            picture = jwtClaimsSet.getStringClaim("picture");
+            userId = jwtClaimsSet.getLongClaim("id");
+        } catch (ParseException | JOSEException e) {
+            return Mono.error(e);
         }
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPicture(picture);
+        user.setId(userId);
+        user.setCoins(0);
+        PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken = new PreAuthenticatedAuthenticationToken(
+            user,
+            signedJWT,
+            DEFAULT_GRANTED_AUTHORITIES
+        );
+        SecurityContextImpl securityContext = new SecurityContextImpl(preAuthenticatedAuthenticationToken);
+        statelessWebSession.getAttributes().putIfAbsent(
+            WebSessionServerSecurityContextRepository.DEFAULT_SPRING_SECURITY_CONTEXT_ATTR_NAME,
+            securityContext
+        );
+        return Mono.just(statelessWebSession);
     }
 
 }
