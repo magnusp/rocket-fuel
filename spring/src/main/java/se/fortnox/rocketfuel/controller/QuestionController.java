@@ -5,6 +5,7 @@ import reactor.core.publisher.Mono;
 import se.fortnox.rocketfuel.api.Question;
 import se.fortnox.rocketfuel.api.QuestionResource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,22 +22,42 @@ public class QuestionController implements QuestionResource {
 
     @Override
     public Mono<List<Question>> getLatestQuestions() {
-        return Mono.error(new UnsupportedOperationException());
+        Question question = new Question();
+        question.setTitle("Some stub title");
+        List<Question> questions = new ArrayList<>();
+        questions.add(question);
+        return Mono.just(questions);
+        //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
     public Mono<List<Question>> getPopularQuestions() {
-        return Mono.error(new UnsupportedOperationException());
+        Question question = new Question();
+        question.setTitle("Some stub title");
+        List<Question> questions = new ArrayList<>();
+        questions.add(question);
+        return Mono.just(questions);
+        //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
     public Mono<List<Question>> getPopularUnansweredQuestions() {
-        return Mono.error(new UnsupportedOperationException());
+        Question question = new Question();
+        question.setTitle("Some stub title");
+        List<Question> questions = new ArrayList<>();
+        questions.add(question);
+        return Mono.just(questions);
+        //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
     public Mono<List<Question>> getRecentlyAcceptedQuestions() {
-        return Mono.error(new UnsupportedOperationException());
+        Question question = new Question();
+        question.setTitle("Some stub title");
+        List<Question> questions = new ArrayList<>();
+        questions.add(question);
+        return Mono.just(questions);
+        //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
@@ -46,12 +67,22 @@ public class QuestionController implements QuestionResource {
 
     @Override
     public Mono<List<Question>> getQuestionsBySearchQuery(String searchQuery) {
-        return Mono.error(new UnsupportedOperationException());
+        Question question = new Question();
+        question.setTitle("Some stub title");
+        List<Question> questions = new ArrayList<>();
+        questions.add(question);
+        return Mono.just(questions);
+        //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
     public Mono<List<Question>> getQuestions(long userId) {
-        return Mono.error(new UnsupportedOperationException());
+        Question question = new Question();
+        question.setTitle("Some stub title");
+        List<Question> questions = new ArrayList<>();
+        questions.add(question);
+        return Mono.just(questions);
+        //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override

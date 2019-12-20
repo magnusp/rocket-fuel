@@ -19,7 +19,7 @@ class HomeView extends React.Component {
     }
 
     componentDidMount() {
-        //this.fetchQuestions();
+        this.fetchQuestions();
     }
 
     fetchQuestions() {

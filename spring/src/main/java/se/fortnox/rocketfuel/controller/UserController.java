@@ -74,7 +74,10 @@ public class UserController implements UserResource {
                 user.setPicture(picture);
                 user.setCoins(0);
 
-                ResponseCookie responseCookie = ResponseCookie.from("applicationToken", applicationToken).build();
+                ResponseCookie responseCookie = ResponseCookie
+                    .from("applicationToken", applicationToken)
+                    .path("/")
+                    .build();
                 exchange.getResponse().beforeCommit(() -> {
                     exchange.getResponse().addCookie(responseCookie);
                     return Mono.empty();
