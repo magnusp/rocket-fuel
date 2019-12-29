@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="rocket-fuel-report" />
+        <module name="rocket-fuel-api" />
+        <module name="rocket-fuel-spec" />
+        <module name="rocket-fuel-spring" />
+        <module name="rocket-fuel-impl" />
+        <module name="rocket-fuel-ui" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="rocket-fuel" target="1.8" />
+      <module name="rocket-fuel-api" target="1.8" />
+      <module name="rocket-fuel-impl" target="1.8" />
+      <module name="rocket-fuel-report" target="1.8" />
+      <module name="rocket-fuel-spec" target="1.8" />
+      <module name="rocket-fuel-spring" target="11" />
+      <module name="rocket-fuel-ui" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="rocket-fuel-api" options="-parameters" />
+      <module name="rocket-fuel-impl" options="-parameters" />
+      <module name="rocket-fuel-report" options="-parameters" />
+      <module name="rocket-fuel-spec" options="-parameters" />
+      <module name="rocket-fuel-spring" options="-parameters" />
+      <module name="rocket-fuel-ui" options="-parameters" />
+    </option>
+  </component>
+</project>

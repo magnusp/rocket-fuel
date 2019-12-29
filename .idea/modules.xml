@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/rocket-fuel.iml" filepath="$PROJECT_DIR$/rocket-fuel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api/rocket-fuel-api.iml" filepath="$PROJECT_DIR$/api/rocket-fuel-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/impl/rocket-fuel-impl.iml" filepath="$PROJECT_DIR$/impl/rocket-fuel-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/report/rocket-fuel-report.iml" filepath="$PROJECT_DIR$/report/rocket-fuel-report.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spec/rocket-fuel-spec.iml" filepath="$PROJECT_DIR$/spec/rocket-fuel-spec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring/rocket-fuel-spring.iml" filepath="$PROJECT_DIR$/spring/rocket-fuel-spring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ui/rocket-fuel-ui.iml" filepath="$PROJECT_DIR$/ui/rocket-fuel-ui.iml" />
+    </modules>
+  </component>
+</project>
