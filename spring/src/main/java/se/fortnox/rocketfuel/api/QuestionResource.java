@@ -9,15 +9,6 @@ import java.util.List;
 public interface QuestionResource {
 
     /**
-     * Return a question if found by a slack id
-     *
-     * @param slackId id from slack
-     * @return question
-     */
-    @GetMapping("questions/byslackid/{slackId}")
-    Mono<Question> getQuestionBySlackThreadId(@PathVariable String slackId);
-
-    /**
      * Returns a specific question to the client
      */
     @GetMapping("questions/{questionId}")

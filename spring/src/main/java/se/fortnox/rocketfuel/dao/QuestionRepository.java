@@ -24,7 +24,7 @@ public interface QuestionRepository extends ReactiveCrudRepository<Question, Lon
                 "\"user\" on \"user\".id = question.user_id WHERE question.user_id=:userId " +
                 "ORDER BY " +
                 "question.created_at DESC")
-    Mono<Question> findById(long userId);
+    Mono<Question> findByUserId(long userId);
 
     @Query(
         "INSERT INTO " +
@@ -33,16 +33,14 @@ public interface QuestionRepository extends ReactiveCrudRepository<Question, Lon
             "title, " +
             "bounty, " +
             "created_at, " +
-            "user_id, " +
-            "slack_id) " +
+            "user_id) " +
             " VALUES" +
             "(" +
-            ":question.question, " +
-            ":question.title, " +
-            ":question.bounty, " +
+            ":question, " +
+            ":title, " +
+            ":bounty, " +
             "NOW(), " +
-            ":userId, " +
-            ":question.slackId" +
-            ")")
-    Mono<Long> addQuestion(long userId, Question question);
+            ":userId" +
+            ") RETURNING id")
+    Mono<Long> addQuestion(long userId, String question, String title, int bounty);
 }

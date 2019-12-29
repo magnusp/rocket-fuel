@@ -17,8 +17,6 @@
 
     private boolean answerAccepted;
 
-    private String slackThreadId;
-
     public boolean isAnswerAccepted() {
         return answerAccepted;
     }
@@ -41,14 +39,6 @@
 
     public void setBounty(Integer bounty) {
         this.bounty = bounty;
-    }
-
-    public String getSlackThreadId() {
-       return slackThreadId;
-    }
-
-    public void setSlackThreadId(String slackThreadId) {
-       this.slackThreadId = slackThreadId;
     }
 
      public String getTitle() {

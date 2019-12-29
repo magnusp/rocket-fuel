@@ -43,14 +43,4 @@ public class AnswerController implements AnswerResource {
     public Mono<Void> downVoteAnswer(long answerId) {
         return Mono.error(new UnsupportedOperationException());
     }
-
-    @Override
-    public Mono<Answer> getAnswerBySlackId(String slackId) {
-        return Mono.error(new UnsupportedOperationException());
-    }
-
-    @Override
-    public Mono<Answer> getAnswerById(long answerId) {
-        return Mono.error(new UnsupportedOperationException());
-    }
 }

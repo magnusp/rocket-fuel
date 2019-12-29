@@ -18,13 +18,8 @@ public class QuestionController implements QuestionResource {
     }
 
     @Override
-    public Mono<Question> getQuestionBySlackThreadId(String slackId) {
-        return Mono.error(new UnsupportedOperationException());
-    }
-
-    @Override
     public Mono<Question> getQuestion(long questionId) {
-        return Mono.from(questionRepository.findById(questionId));
+        return Mono.from(questionRepository.findByUserId(questionId));
     }
 
     @Override
@@ -69,7 +64,11 @@ public class QuestionController implements QuestionResource {
 
     @Override
     public Mono<Question> createQuestion(Question question) {
-        return Mono.error(new UnsupportedOperationException());
+        return questionRepository
+            .addQuestion(1, question.getQuestion(), question.getTitle(), 0)
+            .flatMap(aLong -> {
+                return questionRepository.findById(aLong);
+            });
     }
 
     @Override

@@ -78,13 +78,4 @@ public interface AnswerResource {
      */
     @PostMapping("answers/{answerId}/downvote")
     Mono<Void> downVoteAnswer(@PathVariable long answerId);
-
-    /**
-     * Returns the answer matching a certain slackId
-     *
-     * @return answers for a question
-     */
-    Mono<Answer> getAnswerBySlackId(String slackId);
-
-    Mono<Answer> getAnswerById(long answerId);
 }

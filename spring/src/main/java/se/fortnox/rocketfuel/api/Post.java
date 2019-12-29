@@ -18,7 +18,6 @@ public abstract class Post {
     @Id
     private Long id;
 
-    private String createdBy;
 
     private Long userId;
 
@@ -31,14 +30,6 @@ public abstract class Post {
     private String slackId;
 
     private Integer currentUserVote;
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 
     @JsonProperty("createdAt")
     public ZonedDateTime getCreated() {
@@ -78,14 +69,6 @@ public abstract class Post {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public String getSlackId() {
-        return slackId;
-    }
-
-    public void setSlackId(String slackId) {
-        this.slackId = slackId;
     }
 
     public String getPicture() {
