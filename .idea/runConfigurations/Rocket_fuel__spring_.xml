@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Rocket fuel (spring)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="rocket-fuel-spring" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="se.fortnox.rocketfuel.RocketFuelApplication" />
+    <option name="DEBUG_MODE" value="true" />
+    <option name="HIDE_BANNER" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
