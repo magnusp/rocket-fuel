@@ -4,12 +4,19 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import se.fortnox.rocketfuel.api.Question;
 import se.fortnox.rocketfuel.api.QuestionResource;
+import se.fortnox.rocketfuel.dao.QuestionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class QuestionController implements QuestionResource {
+    private final QuestionRepository questionRepository;
+
+    public QuestionController(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
+
     @Override
     public Mono<Question> getQuestionBySlackThreadId(String slackId) {
         return Mono.error(new UnsupportedOperationException());
@@ -17,7 +24,7 @@ public class QuestionController implements QuestionResource {
 
     @Override
     public Mono<Question> getQuestion(long questionId) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.from(questionRepository.findById(questionId));
     }
 
     @Override

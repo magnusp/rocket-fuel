@@ -1,19 +1,21 @@
- package se.fortnox.rocketfuel.api;
+package se.fortnox.rocketfuel.api;
 
- import com.fasterxml.jackson.annotation.JsonIgnore;
- import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
 
- import java.time.LocalDateTime;
- import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
- import static java.time.ZoneId.systemDefault;
- import static java.util.Optional.ofNullable;
+import static java.time.ZoneId.systemDefault;
+import static java.util.Optional.ofNullable;
 
- /**
-  * A class that defines the shared attributes between a {@link Answer}
-  * or {@link Question}.
-  */
- public abstract class Post {
+/**
+ * A class that defines the shared attributes between a {@link Answer}
+ * or {@link Question}.
+ */
+public abstract class Post {
+    @Id
     private Long id;
 
     private String createdBy;
@@ -78,30 +80,30 @@
         this.userId = userId;
     }
 
-     public String getSlackId() {
-         return slackId;
-     }
+    public String getSlackId() {
+        return slackId;
+    }
 
-     public void setSlackId(String slackId) {
-         this.slackId = slackId;
-     }
+    public void setSlackId(String slackId) {
+        this.slackId = slackId;
+    }
 
-     public String getPicture() {
-         return picture;
-     }
+    public String getPicture() {
+        return picture;
+    }
 
-     public void setPicture(String picture) {
-         this.picture = picture;
-     }
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 
-     /**
-      * When populated, represents the value of the vote that the "current user" has applied to the post.
-      */
-     public Integer getCurrentUserVote() {
-         return currentUserVote;
-     }
+    /**
+     * When populated, represents the value of the vote that the "current user" has applied to the post.
+     */
+    public Integer getCurrentUserVote() {
+        return currentUserVote;
+    }
 
-     public void setCurrentUserVote(Integer currentUserVote) {
-         this.currentUserVote = currentUserVote;
-     }
- }
+    public void setCurrentUserVote(Integer currentUserVote) {
+        this.currentUserVote = currentUserVote;
+    }
+}
