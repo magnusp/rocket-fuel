@@ -101,7 +101,7 @@
                 <configuration>
                     <changeLogFile>src/main/resources/migrations-spring.xml</changeLogFile>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:15432/rocket-fuel</url>
+                    <url>jdbc:postgresql://192.168.99.100:15432/rocket-fuel</url>
                     <username>rocket-fuel</username>
                     <password>rocket-fuel</password>
                     <defaultCatalogName>public</defaultCatalogName>

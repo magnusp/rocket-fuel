@@ -5,7 +5,9 @@ import reactor.core.publisher.Mono;
 import se.fortnox.rocketfuel.api.Question;
 import se.fortnox.rocketfuel.api.QuestionResource;
 import se.fortnox.rocketfuel.dao.QuestionRepository;
+import se.fortnox.rocketfuel.document.CreateQuestion;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,15 @@ public class QuestionController implements QuestionResource {
     }
 
     @Override
-    public Mono<Question> getQuestion(long questionId) {
-        return Mono.from(questionRepository.findByUserId(questionId));
+    public Mono<se.fortnox.rocketfuel.document.Question> getQuestion(long questionId) {
+       return questionRepository.findById(questionId).map(entity -> {
+           se.fortnox.rocketfuel.document.Question representation = new se.fortnox.rocketfuel.document.Question();
+           representation.setId(entity.getId());
+           representation.setTitle(entity.getTitle());
+           representation.setQuestion(entity.getQuestion());
+           representation.setCreatedAt(entity.getCreatedAt());
+           return representation;
+       });
     }
 
     @Override
@@ -63,12 +72,23 @@ public class QuestionController implements QuestionResource {
     }
 
     @Override
-    public Mono<Question> createQuestion(Question question) {
-        return questionRepository
+    public Mono<Question> createQuestion(CreateQuestion doc) {
+        se.fortnox.rocketfuel.dao.entity.Question question = new se.fortnox.rocketfuel.dao.entity.Question();
+        question.setTitle(doc.getTitle());
+        question.setQuestion(doc.getBody());
+        question.setCreatedAt(OffsetDateTime.now());
+        return questionRepository.save(question).map(entity -> {
+            Question representation = new Question();
+            representation.setId(entity.getId());
+            representation.setTitle(entity.getTitle());
+            representation.setQuestion(entity.getQuestion());
+            return representation;
+        });
+        /*return questionRepository
             .addQuestion(1, question.getQuestion(), question.getTitle(), 0)
             .flatMap(aLong -> {
                 return questionRepository.findById(aLong);
-            });
+            });*/
     }
 
     @Override
