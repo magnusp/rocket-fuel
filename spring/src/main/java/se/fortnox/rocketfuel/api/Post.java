@@ -2,7 +2,6 @@ package se.fortnox.rocketfuel.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -15,20 +14,12 @@ import static java.util.Optional.ofNullable;
  * or {@link Question}.
  */
 public abstract class Post {
-    @Id
     private Long id;
-
-
     private Long userId;
-
     private String picture;
-
     private LocalDateTime createdAt;
-
     private Integer votes;
-
     private String slackId;
-
     private Integer currentUserVote;
 
     @JsonProperty("createdAt")

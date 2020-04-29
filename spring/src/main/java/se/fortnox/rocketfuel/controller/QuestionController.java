@@ -1,12 +1,13 @@
 package se.fortnox.rocketfuel.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import se.fortnox.rocketfuel.api.Question;
 import se.fortnox.rocketfuel.api.QuestionResource;
 import se.fortnox.rocketfuel.dao.QuestionRepository;
-import se.fortnox.rocketfuel.document.CreateQuestion;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,99 +21,95 @@ public class QuestionController implements QuestionResource {
     }
 
     @Override
-    public Mono<se.fortnox.rocketfuel.document.Question> getQuestion(long questionId) {
-       return questionRepository.findById(questionId).map(entity -> {
-           se.fortnox.rocketfuel.document.Question representation = new se.fortnox.rocketfuel.document.Question();
-           representation.setId(entity.getId());
-           representation.setTitle(entity.getTitle());
-           representation.setQuestion(entity.getQuestion());
-           representation.setCreatedAt(entity.getCreatedAt());
-           return representation;
-       });
+    public Mono<se.fortnox.rocketfuel.api.Question> getQuestion(long questionId) {
+        return questionRepository
+            .findById(questionId)
+            .map(question -> {
+                se.fortnox.rocketfuel.api.Question q1 = new se.fortnox.rocketfuel.api.Question();
+                q1.setId(question.getId());
+                q1.setTitle(question.getTitle());
+                q1.setQuestion(question.getQuestion());
+                return q1;
+            });
     }
 
     @Override
-    public Mono<List<Question>> getLatestQuestions() {
-        Question question = new Question();
+    public Mono<List<se.fortnox.rocketfuel.api.Question>> getLatestQuestions() {
+        se.fortnox.rocketfuel.api.Question question = new se.fortnox.rocketfuel.api.Question();
         question.setTitle("Some stub title");
-        List<Question> questions = new ArrayList<>();
+        List<se.fortnox.rocketfuel.api.Question> questions = new ArrayList<>();
         questions.add(question);
         return Mono.just(questions);
         //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<List<Question>> getPopularQuestions() {
-        Question question = new Question();
+    public Mono<List<se.fortnox.rocketfuel.api.Question>> getPopularQuestions() {
+        se.fortnox.rocketfuel.api.Question question = new se.fortnox.rocketfuel.api.Question();
         question.setTitle("Some stub title");
-        List<Question> questions = new ArrayList<>();
+        List<se.fortnox.rocketfuel.api.Question> questions = new ArrayList<>();
         questions.add(question);
         return Mono.just(questions);
         //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<List<Question>> getPopularUnansweredQuestions() {
-        Question question = new Question();
+    public Mono<List<se.fortnox.rocketfuel.api.Question>> getPopularUnansweredQuestions() {
+        se.fortnox.rocketfuel.api.Question question = new se.fortnox.rocketfuel.api.Question();
         question.setTitle("Some stub title");
-        List<Question> questions = new ArrayList<>();
+        List<se.fortnox.rocketfuel.api.Question> questions = new ArrayList<>();
         questions.add(question);
         return Mono.just(questions);
         //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<List<Question>> getRecentlyAcceptedQuestions() {
-        Question question = new Question();
+    public Mono<List<se.fortnox.rocketfuel.api.Question>> getRecentlyAcceptedQuestions() {
+        se.fortnox.rocketfuel.api.Question question = new se.fortnox.rocketfuel.api.Question();
         question.setTitle("Some stub title");
-        List<Question> questions = new ArrayList<>();
+        List<se.fortnox.rocketfuel.api.Question> questions = new ArrayList<>();
         questions.add(question);
         return Mono.just(questions);
         //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<Question> createQuestion(CreateQuestion doc) {
-        se.fortnox.rocketfuel.dao.entity.Question question = new se.fortnox.rocketfuel.dao.entity.Question();
-        question.setTitle(doc.getTitle());
-        question.setQuestion(doc.getBody());
-        question.setCreatedAt(OffsetDateTime.now());
-        return questionRepository.save(question).map(entity -> {
-            Question representation = new Question();
-            representation.setId(entity.getId());
-            representation.setTitle(entity.getTitle());
-            representation.setQuestion(entity.getQuestion());
-            return representation;
-        });
-        /*return questionRepository
-            .addQuestion(1, question.getQuestion(), question.getTitle(), 0)
-            .flatMap(aLong -> {
-                return questionRepository.findById(aLong);
-            });*/
+    public Mono<Void> createQuestion(se.fortnox.rocketfuel.api.Question question, ServerHttpResponse response) {
+        se.fortnox.rocketfuel.dao.entity.Question questionEntity = new se.fortnox.rocketfuel.dao.entity.Question();
+        questionEntity.setCreatedAt(OffsetDateTime.now());
+        questionEntity.setQuestion(question.getQuestion());
+        questionEntity.setTitle(question.getTitle());
+        return questionRepository
+            .save(questionEntity)
+            .flatMap(q1 -> {
+                response.setStatusCode(HttpStatus.SEE_OTHER);
+                response.getHeaders().setLocation(URI.create("/api/questions/" + q1.getId()));
+                return Mono.empty();
+            });
     }
 
     @Override
-    public Mono<List<Question>> getQuestionsBySearchQuery(String searchQuery) {
-        Question question = new Question();
+    public Mono<List<se.fortnox.rocketfuel.api.Question>> getQuestionsBySearchQuery(String searchQuery) {
+        se.fortnox.rocketfuel.api.Question question = new se.fortnox.rocketfuel.api.Question();
         question.setTitle("Some stub title");
-        List<Question> questions = new ArrayList<>();
+        List<se.fortnox.rocketfuel.api.Question> questions = new ArrayList<>();
         questions.add(question);
         return Mono.just(questions);
         //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<List<Question>> getQuestions(long userId) {
-        Question question = new Question();
+    public Mono<List<se.fortnox.rocketfuel.api.Question>> getQuestions(long userId) {
+        se.fortnox.rocketfuel.api.Question question = new se.fortnox.rocketfuel.api.Question();
         question.setTitle("Some stub title");
-        List<Question> questions = new ArrayList<>();
+        List<se.fortnox.rocketfuel.api.Question> questions = new ArrayList<>();
         questions.add(question);
         return Mono.just(questions);
         //return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<Question> updateQuestion(long questionId, Question question) {
+    public Mono<se.fortnox.rocketfuel.api.Question> updateQuestion(long questionId, se.fortnox.rocketfuel.api.Question question) {
         return Mono.error(new UnsupportedOperationException());
     }
 
@@ -132,7 +129,7 @@ public class QuestionController implements QuestionResource {
     }
 
     @Override
-    public Mono<Question> getQuestionById(long questionId) {
+    public Mono<se.fortnox.rocketfuel.api.Question> getQuestionById(long questionId) {
         return Mono.error(new UnsupportedOperationException());
     }
 }

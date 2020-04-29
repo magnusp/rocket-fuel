@@ -1,15 +1,14 @@
 package se.fortnox.rocketfuel.api;
 
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Mono;
-import se.fortnox.rocketfuel.document.CreateQuestion;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface QuestionResource {
      * Returns a specific question to the client
      */
     @GetMapping("questions/{questionId}")
-    Mono<se.fortnox.rocketfuel.document.Question> getQuestion(@PathVariable long questionId);
+    Mono<Question> getQuestion(@PathVariable long questionId);
 
     /**
      * Return a list of latest questions
@@ -67,7 +66,7 @@ public interface QuestionResource {
      * @param doc
      */
     @PostMapping("questions")
-    public Mono<Question> createQuestion(@RequestBody CreateQuestion doc);
+    public Mono<Void>createQuestion(Question question, ServerHttpResponse response);
 
     /**
      * Acts like a universal search. It will return questions that can be related to the search term.

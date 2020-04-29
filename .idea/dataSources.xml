@@ -7,5 +7,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://192.168.99.100:15432/postgres</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="slask" uuid="27afda7c-1d64-4eef-a4fe-82c8cb8f8355">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://192.168.99.100:32777/integration-tests-db?loggerLevel=OFF</jdbc-url>
+    </data-source>
   </component>
 </project>
