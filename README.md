@@ -4,22 +4,22 @@
 [![codecov](https://codecov.io/gh/FortnoxAB/rocket-fuel/branch/master/graph/badge.svg)](https://codecov.io/gh/FortnoxAB/rocket-fuel)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=se.fortnox:rocket-fuel&metric=alert_status)](https://sonarcloud.io/dashboard?id=se.fortnox:rocket-fuel)
 
-Rocket fuel is a question/answer platform that you deploy with docker wherever you want. Its main goal is to spread knowledge.
+Rocket fuel is a questionRepresentation/answerRepresentation platform that you deploy with docker wherever you want. Its main goal is to spread knowledge.
 
 This backend is built with [Reactive wizard](https://github.com/FortnoxAB/reactive-wizard). Reactive Wizard projects makes it easy to build performant and scalable web applications that harness the power of RxNetty (i.e., RxJava and Netty). The frontend is built with React and talks with the backend though a REST api. 
 
-The application's main goal is to share knowledge inside an organisation. One may find a lot of information on Google, Stack Overflow etc. Typically an organisation has a lot of internal knowledge that everyone needs to learn where historically a lot of tools have been used to aid this problem (Confluence etc.). The problem is that this documentation has typically been hard to find and maintain. Rocket fuel solves this problem by integrating with Slack, a tool used by many organisations. With the help of the Slack integration, questions and answers can be added to Rocket fuel by integrating it to the workflow people are used to. 
+The application's main goal is to share knowledge inside an organisation. One may find a lot of information on Google, Stack Overflow etc. Typically an organisation has a lot of internal knowledge that everyone needs to learn where historically a lot of tools have been used to aid this problem (Confluence etc.). The problem is that this documentation has typically been hard to find and maintain. Rocket fuel solves this problem by integrating with Slack, a tool used by many organisations. With the help of the Slack integration, questionRepresentations and answers can be added to Rocket fuel by integrating it to the workflow people are used to. 
 
-After some time, a lot of questions and answers will be added to Rocket fuel. You can search for questions in Rocket fuel as well as answer questions there. To filter out all the noise, a rating system is used for questions and answers, so that the most relevant questions and answers will be shown to the user.
+After some time, a lot of questionRepresentations and answers will be added to Rocket fuel. You can search for questionRepresentations in Rocket fuel as well as answerRepresentation questionRepresentations there. To filter out all the noise, a rating system is used for questionRepresentations and answers, so that the most relevant questionRepresentations and answers will be shown to the user.
 
 ## This is how it works. 
 
 ### Questions and answers are created through slack (Work in progress)
 
-As a thread is started in Slack, the Rocket fuel bot detects that a question has been asked and the bot asks the members of the thread if they want to save the question and the answers in Rocket fuel, so that anyone in the organisation easily can find the question and the answers later on, instead of asking the question again. 
+As a thread is started in Slack, the Rocket fuel bot detects that a questionRepresentation has been asked and the bot asks the members of the thread if they want to save the questionRepresentation and the answers in Rocket fuel, so that anyone in the organisation easily can find the questionRepresentation and the answers later on, instead of asking the questionRepresentation again. 
 
 ### Questions and answers are created in the UI.
-A user can add a question to Rocket fuel directly in the UI, and then wait for anyone to answer it, this is very similar to how it works on Stack overflow. When an answer has been submitted, the user will be notified through Slack. The user will be given a link to the question. Then its up to the user to accept the answer or write back. 
+A user can add a questionRepresentation to Rocket fuel directly in the UI, and then wait for anyone to answerRepresentation it, this is very similar to how it works on Stack overflow. When an answerRepresentation has been submitted, the user will be notified through Slack. The user will be given a link to the questionRepresentation. Then its up to the user to accept the answerRepresentation or write back. 
 
 
 ### Contribution

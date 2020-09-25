@@ -13,21 +13,9 @@
     <dependencies>
         <dependency>
             <groupId>se.fortnox</groupId>
-            <artifactId>rocket-fuel-impl</artifactId>
+            <artifactId>rocket-fuel-spring</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>se.fortnox</groupId>
-            <artifactId>rocket-fuel-api</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>se.fortnox</groupId>
-            <artifactId>rocket-fuel-spec</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

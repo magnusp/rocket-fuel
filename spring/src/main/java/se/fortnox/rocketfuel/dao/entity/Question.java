@@ -7,9 +7,45 @@ import java.time.OffsetDateTime;
 public class Question {
     @Id
     private Long id;
-    private String title;
     private String question;
+    private String title;
+    private Long bounty;
     private OffsetDateTime createdAt;
+    private Long userId;
+    private Boolean answerAccepted;
+    private String slackId;
+
+    public Long getBounty() {
+        return bounty;
+    }
+
+    public void setBounty(Long bounty) {
+        this.bounty = bounty;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Boolean getAnswerAccepted() {
+        return answerAccepted;
+    }
+
+    public void setAnswerAccepted(Boolean answerAccepted) {
+        this.answerAccepted = answerAccepted;
+    }
+
+    public String getSlackId() {
+        return slackId;
+    }
+
+    public void setSlackId(String slackId) {
+        this.slackId = slackId;
+    }
 
     public String getTitle() {
         return title;

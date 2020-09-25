@@ -13,5 +13,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://192.168.99.100:32777/integration-tests-db?loggerLevel=OFF</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="rocketfuel" uuid="68144f9f-f5f8-487d-a951-da57eb585222">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://127.0.0.1:15432/rocket-fuel</jdbc-url>
+    </data-source>
   </component>
 </project>

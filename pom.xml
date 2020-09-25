@@ -7,12 +7,9 @@
     <packaging>pom</packaging>
     <version>0.1.22-SNAPSHOT</version>
     <modules>
-        <module>api</module>
-        <module>impl</module>
-        <module>spec</module>
+        <module>spring</module>
         <module>ui</module>
         <module>report</module>
-        <module>spring</module>
     </modules>
 
     <properties>

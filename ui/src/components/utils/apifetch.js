@@ -17,6 +17,7 @@ function ApiFetch(options = {}, tryCount = 0) {
 
     options = Object.assign(defaultOptions, options);
     Object.assign(options.headers, headers);
+    options.headers['Accept'] = 'application/json';
     options.headers['Content-Type'] = 'application/json';
 
     let fetchOptions = {

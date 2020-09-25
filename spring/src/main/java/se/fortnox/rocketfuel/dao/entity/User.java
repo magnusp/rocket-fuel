@@ -1,19 +1,13 @@
- package api;
+package se.fortnox.rocketfuel.dao.entity;
 
- import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
 
- public class User {
-
-    private Long id;
-
-    private String email;
-
-    private String name;
-
-    @JsonIgnore
-    private Integer coins;
-
-    private String picture;
+public class User {
+    @Id
+    Long id;
+    String email;
+    String name;
+    String picture;
 
     public Long getId() {
         return id;
@@ -39,20 +33,11 @@
         this.name = name;
     }
 
-    public Integer getCoins() {
-        return coins;
-    }
-
-    public void setCoins(Integer coins) {
-        this.coins = coins;
+    public String getPicture() {
+        return picture;
     }
 
     public void setPicture(String picture) {
         this.picture = picture;
     }
-
-    public String getPicture() {
-        return picture;
-    }
-
 }

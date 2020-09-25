@@ -1,6 +1,14 @@
 package se.fortnox.rocketfuel.api;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -13,7 +21,7 @@ public interface AnswerResource {
      * Creates an answer to a question
      */
     @PostMapping("questions/{questionId}/answers")
-    Mono<Answer> createAnswer(Answer answer, @PathVariable long questionId);
+    Mono<AnswerRepresentation> createAnswer(AnswerRepresentation answerRepresentation, @PathVariable long questionId);
 
     /**
      * Returns all answers for a given question
@@ -22,7 +30,7 @@ public interface AnswerResource {
      * @return answers for a question
      */
     @GetMapping("questions/{questionId}/answers")
-    Mono<List<Answer>> getAnswers(@PathVariable long questionId);
+    Mono<List<AnswerRepresentation>> getAnswers(@PathVariable long questionId);
 
     /**
      * Marks a given answer as answered. The method will mark the question as well as answered.
@@ -40,11 +48,11 @@ public interface AnswerResource {
      * Only title and answer can be answered.
      *
      * @param answerId the answers unique id
-     * @param answer the new state of the answer
+     * @param answerRepresentation the new state of the answer
      * @return nothing
      */
     @PutMapping("answers/{answerId}")
-    Mono<Void> updateAnswer(@PathVariable long answerId, @RequestBody Answer answer);
+    Mono<Void> updateAnswer(@PathVariable long answerId, @RequestBody AnswerRepresentation answerRepresentation);
 
     /**
      * Deletes an answer

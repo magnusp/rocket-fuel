@@ -62,7 +62,8 @@ export function createQuestion(question, token) {
         method: 'POST',
         body: question,
         headers: {
-            authorizationToken: token
+            authorizationToken: token,
+            'Content-Type': 'application/json'
         }
     };
 

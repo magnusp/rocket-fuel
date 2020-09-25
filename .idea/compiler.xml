@@ -7,10 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rocket-fuel-report" />
-        <module name="rocket-fuel-api" />
-        <module name="rocket-fuel-spec" />
         <module name="rocket-fuel-spring" />
-        <module name="rocket-fuel-impl" />
         <module name="rocket-fuel-ui" />
       </profile>
     </annotationProcessing>
