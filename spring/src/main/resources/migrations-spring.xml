@@ -3,11 +3,11 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="jesper" id="1547661628486-1">
-        <createTable tableName="answerDocument">
+        <createTable tableName="answer">
             <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="answer_pk"/>
             </column>
-            <column name="answerDocument" type="VARCHAR">
+            <column name="answer" type="VARCHAR">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="VARCHAR">
@@ -31,11 +31,11 @@
         </createTable>
     </changeSet>
     <changeSet author="jesper" id="1547661628486-2">
-        <createTable tableName="questionDocument">
+        <createTable tableName="question">
             <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="question_pk"/>
             </column>
-            <column name="questionDocument" type="VARCHAR">
+            <column name="question" type="VARCHAR">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="VARCHAR">
@@ -74,7 +74,7 @@
     </changeSet>
 
     <changeSet id="add_slack_thread_id" author="jonas.fredin">
-        <addColumn tableName="questionDocument">
+        <addColumn tableName="question">
             <column name="slack_thread_id" type="VARCHAR">
                 <constraints unique="true"/>
             </column>
@@ -82,7 +82,7 @@
     </changeSet>
 
     <changeSet id="add_slack_thread_id_answer" author="jonas.fredin">
-        <addColumn tableName="answerDocument">
+        <addColumn tableName="answer">
             <column name="slack_id" type="VARCHAR">
                 <constraints unique="true"/>
             </column>
@@ -90,16 +90,16 @@
     </changeSet>
 
     <changeSet id="change_votes_types" author="jonas.fredin">
-        <dropDefaultValue tableName="questionDocument" columnName="votes"/>
-        <dropDefaultValue tableName="answerDocument" columnName="votes"/>
-        <modifyDataType tableName="questionDocument" columnName="votes" newDataType="INTEGER"/>
-        <modifyDataType tableName="answerDocument" columnName="votes" newDataType="INTEGER"/>
-        <addDefaultValue tableName="questionDocument" columnName="votes" defaultValueNumeric="0"/>
-        <addDefaultValue tableName="answerDocument" columnName="votes" defaultValueNumeric="0"/>
+        <dropDefaultValue tableName="question" columnName="votes"/>
+        <dropDefaultValue tableName="answer" columnName="votes"/>
+        <modifyDataType tableName="question" columnName="votes" newDataType="INTEGER"/>
+        <modifyDataType tableName="answer" columnName="votes" newDataType="INTEGER"/>
+        <addDefaultValue tableName="question" columnName="votes" defaultValueNumeric="0"/>
+        <addDefaultValue tableName="answer" columnName="votes" defaultValueNumeric="0"/>
     </changeSet>
 
     <changeSet id="change_column_name" author="jonas.fredin">
-        <renameColumn tableName="questionDocument" oldColumnName="slack_thread_id" newColumnName="slack_id"/>
+        <renameColumn tableName="question" oldColumnName="slack_thread_id" newColumnName="slack_id"/>
     </changeSet>
 
     <changeSet id="add_user_coins" author="tobias.friberg">
@@ -113,17 +113,17 @@
     <changeSet id="add_constrain_for_questionid_and_answerId" author="">
         <addUniqueConstraint columnNames="id, question_id"
                              constraintName="question_answer_unique_key"
-                             tableName="answerDocument"/>
+                             tableName="answer"/>
     </changeSet>
 
     <changeSet id="add_delete_on_cascade_between_question_and_answer" author="jesper.lahdevirta">
         <addForeignKeyConstraint baseColumnNames="question_id"
-                                 baseTableName="answerDocument"
+                                 baseTableName="answer"
                                  constraintName="fk_question_answer_constrain"
                                  onDelete="CASCADE"
                                  onUpdate="NO ACTION"
                                  referencedColumnNames="id"
-                                 referencedTableName="questionDocument"/>
+                                 referencedTableName="question"/>
     </changeSet>
     <changeSet id="add_user_picture" author="tobias.friberg">
         <addColumn tableName="user">
@@ -133,7 +133,7 @@
         </addColumn>
     </changeSet>
     <changeSet id="drop_column_title_in_answers" author="tobias.friberg">
-        <dropColumn columnName="title" tableName="answerDocument" />
+        <dropColumn columnName="title" tableName="answer" />
     </changeSet>
 
     <changeSet id="add_answer_vote" author="rickard.blomkvist">
@@ -142,7 +142,7 @@
                 <constraints foreignKeyName="fk_answervotes_user_id" references="public.user(id)"/>
             </column>
             <column name="answer_id" type="INTEGER">
-                <constraints foreignKeyName="fk_answervotes_answer_id" references="answerDocument(id)" deleteCascade="true"/>
+                <constraints foreignKeyName="fk_answervotes_answer_id" references="answer(id)" deleteCascade="true"/>
             </column>
             <column name="value" type="INTEGER"/>
             <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
@@ -158,12 +158,12 @@
     </changeSet>
 
     <changeSet id="remove_vote_from_answer" author="rickard.blomkvist">
-        <dropColumn tableName="answerDocument" columnName="votes"/>
+        <dropColumn tableName="answer" columnName="votes"/>
     </changeSet>
 
     <changeSet id="migrate_to_timestamptz" author="rickard.blomkvist">
-        <modifyDataType tableName="answerDocument" columnName="created_at" newDataType="TIMESTAMP WITH TIME ZONE"/>
-        <modifyDataType tableName="questionDocument" columnName="created_at" newDataType="TIMESTAMP WITH TIME ZONE"/>
+        <modifyDataType tableName="answer" columnName="created_at" newDataType="TIMESTAMP WITH TIME ZONE"/>
+        <modifyDataType tableName="question" columnName="created_at" newDataType="TIMESTAMP WITH TIME ZONE"/>
     </changeSet>
 
     <changeSet id="add_question_vote" author="rickard.blomkvist">
@@ -172,7 +172,7 @@
                 <constraints foreignKeyName="fk_questionvote_user_id" references="public.user(id)"/>
             </column>
             <column name="question_id" type="INTEGER">
-                <constraints foreignKeyName="fk_questionvote_question_id" references="questionDocument(id)" deleteCascade="true"/>
+                <constraints foreignKeyName="fk_questionvote_question_id" references="question(id)" deleteCascade="true"/>
             </column>
             <column name="value" type="INTEGER"/>
             <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
@@ -189,21 +189,21 @@
     </changeSet>
 
     <changeSet id="add_accepted_at_to_answer" author="rickard.blomkvist">
-        <addColumn tableName="answerDocument">
+        <addColumn tableName="answer">
             <column name="accepted_at" type="TIMESTAMP WITH TIME ZONE"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="remove_accepted_from_answer" author="rickard.blomkvist">
-        <update tableName="answerDocument">
+        <update tableName="answer">
             <column name="accepted_at" value="NOW()" />
             <where>accepted = TRUE</where>
         </update>
-        <dropColumn tableName="answerDocument" columnName="accepted"/>
+        <dropColumn tableName="answer" columnName="accepted"/>
     </changeSet>
 
     <changeSet id="remove_votes_from_question" author="rickard.blomkvist">
-        <dropColumn tableName="questionDocument" columnName="votes"/>
+        <dropColumn tableName="question" columnName="votes"/>
     </changeSet>
 
 </databaseChangeLog>

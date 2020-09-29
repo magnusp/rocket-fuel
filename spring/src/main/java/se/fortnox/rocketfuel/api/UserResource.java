@@ -22,14 +22,14 @@
       * @return
       */
      @GetMapping("me")
-     Mono<User> getCurrent(Principal principal);
+     Mono<UserDocument> getCurrent(Principal principal);
      /**
       * Creates a user
-      * @param user user that will be created/updated.
+      * @param userDocument user that will be created/updated.
       * @return
       */
      @PostMapping
-     Mono<Integer> createUser(User user);
+     Mono<Integer> createUser(UserDocument userDocument);
 
      /**
       * Returns the user by email
@@ -37,7 +37,7 @@
       * @return
       */
      @GetMapping("email/{email}")
-     Mono<User> getUserByEmail(@NotNull @PathVariable String email, @RequestParam boolean createIfMissing);
+     Mono<UserDocument> getUserByEmail(@NotNull @PathVariable String email, @RequestParam boolean createIfMissing);
 
      /**
       * Returns the user by userId
@@ -45,7 +45,7 @@
       * @return
       */
      @GetMapping("id/{userId}")
-     Mono<User> getUserById(@PathVariable long userId);
+     Mono<UserDocument> getUserById(@PathVariable long userId);
 
      /**
       * Returns a application token, that shall be used when the client uses endpoints
@@ -57,7 +57,7 @@
       * @return a application token as a jwt
       */
      @PostMapping("authenticate")
-     Mono<User> signIn(ServerWebExchange exchange);
+     Mono<UserDocument> signIn(ServerWebExchange exchange);
 
      /**
       * Signs out the user by telling client that the cookie shall be removed and is invalid.

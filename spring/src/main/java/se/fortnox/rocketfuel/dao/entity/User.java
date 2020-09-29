@@ -1,8 +1,12 @@
 package se.fortnox.rocketfuel.dao.entity;
 
 import org.springframework.data.annotation.Id;
+import se.fortnox.rocketfuel.api.UserDocument;
 
-public class User {
+import java.io.Serializable;
+import java.security.Principal;
+
+public class User implements Principal, Serializable {
     @Id
     Long id;
     String email;
@@ -11,6 +15,14 @@ public class User {
     String picture;
 
     public User() {
+    }
+
+    public User(UserDocument userDocument) {
+        this.id = userDocument.getId();
+        this.email = userDocument.getEmail();
+        this.name = userDocument.getName();
+        this.coins = userDocument.getCoins();
+        this.picture = userDocument.getPicture();
     }
 
     public Long getId() {

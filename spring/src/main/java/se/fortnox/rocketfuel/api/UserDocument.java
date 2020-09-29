@@ -2,10 +2,7 @@
 
  import com.fasterxml.jackson.annotation.JsonIgnore;
 
- import java.io.Serializable;
- import java.security.Principal;
-
- public class User implements Principal, Serializable {
+ public class UserDocument {
 
     private Long id;
 
@@ -14,7 +11,7 @@
     private String name;
 
     @JsonIgnore
-    private Integer coins;
+    private Long coins;
 
     private String picture;
 
@@ -42,11 +39,11 @@
         this.name = name;
     }
 
-    public Integer getCoins() {
+    public Long getCoins() {
         return coins;
     }
 
-    public void setCoins(Integer coins) {
+    public void setCoins(Long coins) {
         this.coins = coins;
     }
 

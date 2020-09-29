@@ -16,7 +16,7 @@ import org.springframework.web.server.WebSession;
 import org.springframework.web.server.session.WebSessionManager;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-import se.fortnox.rocketfuel.api.User;
+import se.fortnox.rocketfuel.dao.entity.User;
 
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -85,7 +85,7 @@ public class StatelessWebSessionManager implements WebSessionManager {
         user.setEmail(email);
         user.setPicture(picture);
         user.setId(userId);
-        user.setCoins(0);
+        user.setCoins(0L);
         PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken = new PreAuthenticatedAuthenticationToken(
             user,
             signedJWT,

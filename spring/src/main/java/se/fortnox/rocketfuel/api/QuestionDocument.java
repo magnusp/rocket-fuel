@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /**
- * Defines a question. A question is connected to the {@link User} asking it.
+ * Defines a question. A question is connected to the {@link UserDocument} asking it.
  * <p>
  * A question can be answered if it has a accepted answer.
  * <p>

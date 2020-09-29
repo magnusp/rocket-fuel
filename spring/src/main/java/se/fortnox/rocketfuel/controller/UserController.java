@@ -14,8 +14,10 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import se.fortnox.rocketfuel.api.User;
+import se.fortnox.rocketfuel.api.UserDocument;
 import se.fortnox.rocketfuel.api.UserResource;
+import se.fortnox.rocketfuel.dao.UserRepository;
+import se.fortnox.rocketfuel.dao.entity.User;
 
 import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
@@ -25,65 +27,73 @@ import java.util.Date;
 @RestController
 public class UserController implements UserResource {
 
+    private final UserRepository userRepository;
+
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
-    public Mono<User> getCurrent(Principal principal) {
+    public Mono<UserDocument> getCurrent(Principal principal) {
         return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<Integer> createUser(User user) {
+    public Mono<Integer> createUser(UserDocument userDocument) {
         return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<User> getUserByEmail(@NotNull String email, boolean createIfMissing) {
+    public Mono<UserDocument> getUserByEmail(@NotNull String email, boolean createIfMissing) {
         return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<User> getUserById(long userId) {
+    public Mono<UserDocument> getUserById(long userId) {
         return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<User> signIn(ServerWebExchange exchange) {
+    public Mono<UserDocument> signIn(ServerWebExchange exchange) {
 
         return ReactiveSecurityContextHolder
             .getContext()
-            .map(securityContext -> {
+            .flatMap(securityContext -> {
                 JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) securityContext.getAuthentication();
                 Jwt jwt = (Jwt) jwtAuthenticationToken.getPrincipal();
-
-                String name = jwt.getClaimAsString("name");
                 String email = jwt.getClaimAsString("email");
-                Long useridFromRocketFuel = 1L; // From created or existing user in db
-                String picture = jwt.getClaimAsString("picture");
 
-
-                String applicationToken;
-                try {
-                    applicationToken = buildApplicationToken(name, email, useridFromRocketFuel, picture);
-                } catch (JOSEException e) {
-                    throw new RuntimeException(e);
-                }
-
-                User user = new User();
-                user.setId(useridFromRocketFuel);
-                user.setName(name);
-                user.setEmail(email);
-                user.setPicture(picture);
-                user.setCoins(0);
-
-                ResponseCookie responseCookie = ResponseCookie
-                    .from("applicationToken", applicationToken)
-                    .path("/")
-                    .build();
-                exchange.getResponse().beforeCommit(() -> {
-                    exchange.getResponse().addCookie(responseCookie);
-                    return Mono.empty();
-                });
-
-                return user;
+                return userRepository.findByEmail(email)
+                    .switchIfEmpty(Mono.defer(() -> {
+                        String name = jwt.getClaimAsString("name");
+                        String picture = jwt.getClaimAsString("picture");
+                        User user = new User();
+                        user.setName(name);
+                        user.setPicture(picture);
+                        user.setEmail(email);
+                        return userRepository.save(user.getEmail(), user.getName(), user.getPicture());
+                    })).flatMap(user -> {
+                        try {
+                            String applicationToken = buildApplicationToken(user.getName(), user.getEmail(), user.getId(), user.getPicture());
+                            ResponseCookie responseCookie = ResponseCookie
+                                .from("applicationToken", applicationToken)
+                                .path("/")
+                                .build();
+                            exchange.getResponse().beforeCommit(() -> {
+                                exchange.getResponse().addCookie(responseCookie);
+                                return Mono.empty();
+                            });
+                            UserDocument userDocument = new UserDocument();
+                            userDocument.setId(user.getId());
+                            userDocument.setName(user.getName());
+                            userDocument.setEmail(user.getEmail());
+                            userDocument.setPicture(user.getPicture());
+                            userDocument.setCoins(user.getCoins());
+                            return Mono.just(userDocument);
+                        } catch (JOSEException e) {
+                            return Mono.error(new RuntimeException(e));
+                        }
+                    });
             });
     }
 
