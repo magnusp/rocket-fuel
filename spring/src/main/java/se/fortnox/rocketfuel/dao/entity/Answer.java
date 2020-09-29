@@ -7,12 +7,12 @@ import java.time.OffsetDateTime;
 public class Answer {
     @Id
     private Long id;
-
     private String answer;
     private OffsetDateTime createdAt;
     private Long questionId;
     private Long userId;
     private String slackId;
+    private OffsetDateTime acceptedAt;
 
     public Answer() {
     }
@@ -72,6 +72,4 @@ public class Answer {
     public void setAcceptedAt(OffsetDateTime acceptedAt) {
         this.acceptedAt = acceptedAt;
     }
-
-    private OffsetDateTime acceptedAt;
 }

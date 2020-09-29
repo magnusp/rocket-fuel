@@ -3,7 +3,7 @@ package se.fortnox.rocketfuel.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import se.fortnox.rocketfuel.api.AnswerRepresentation;
+import se.fortnox.rocketfuel.api.AnswerDocument;
 import se.fortnox.rocketfuel.api.AnswerResource;
 import se.fortnox.rocketfuel.dao.AnswerRepository;
 
@@ -20,12 +20,12 @@ public class AnswerController implements AnswerResource {
     }
 
     @Override
-    public Mono<AnswerRepresentation> createAnswer(AnswerRepresentation answerRepresentation, long questionId) {
+    public Mono<AnswerDocument> createAnswer(AnswerDocument answerDocument, long questionId) {
         return Mono.error(new UnsupportedOperationException());
     }
 
     @Override
-    public Mono<List<AnswerRepresentation>> getAnswers(long questionId) {
+    public Mono<List<AnswerDocument>> getAnswers(long questionId) {
         return answerRepository.findByQuestionId(questionId).collectList();
     }
 
@@ -35,7 +35,7 @@ public class AnswerController implements AnswerResource {
     }
 
     @Override
-    public Mono<Void> updateAnswer(long answerId, AnswerRepresentation answerRepresentation) {
+    public Mono<Void> updateAnswer(long answerId, AnswerDocument answerDocument) {
         return Mono.error(new UnsupportedOperationException());
     }
 

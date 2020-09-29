@@ -20,7 +20,7 @@ public interface QuestionResource {
      * Returns a specific question to the client
      */
     @GetMapping("questions/{questionId}")
-    Mono<QuestionRepresentation> getQuestion(@PathVariable long questionId);
+    Mono<QuestionDocument> getQuestion(@PathVariable long questionId);
 
     /**
      * Return a list of latest questions
@@ -30,7 +30,7 @@ public interface QuestionResource {
      */
     @GetMapping("questions/latest")
     //Mono<List<Question>> getLatestQuestions(CollectionOptions options);
-    Mono<List<QuestionRepresentation>> getLatestQuestions();
+    Mono<List<QuestionDocument>> getLatestQuestions();
 
     /**
      * Return a list of the highest voted questions
@@ -40,7 +40,7 @@ public interface QuestionResource {
      */
     @GetMapping("questions/popular")
     //Mono<List<Question>> getPopularQuestions(CollectionOptions options);
-    Mono<List<QuestionRepresentation>> getPopularQuestions();
+    Mono<List<QuestionDocument>> getPopularQuestions();
 
     /**
      * Return a list of the highest voted questions without any answers
@@ -50,7 +50,7 @@ public interface QuestionResource {
      */
     @GetMapping("questions/popularunanswered")
     //Mono<List<Question>> getPopularUnansweredQuestions(CollectionOptions options);
-    Mono<List<QuestionRepresentation>> getPopularUnansweredQuestions();
+    Mono<List<QuestionDocument>> getPopularUnansweredQuestions();
 
     /**
      * Return a list of the questions that had an answer accepted the most recently
@@ -60,21 +60,21 @@ public interface QuestionResource {
      */
     @GetMapping("questions/recentlyaccepted")
     //Mono<List<Question>> getRecentlyAcceptedQuestions(CollectionOptions options);
-    Mono<List<QuestionRepresentation>> getRecentlyAcceptedQuestions();
+    Mono<List<QuestionDocument>> getRecentlyAcceptedQuestions();
 
     /**
      * Adds a question and links it to the given userId.
      * @param doc
      */
     @PostMapping("questions")
-    public Mono<Void>createQuestion(@RequestBody QuestionRepresentation questionRepresentation, ServerHttpResponse response);
+    public Mono<Void>createQuestion(@RequestBody QuestionDocument questionDocument, ServerHttpResponse response);
 
     /**
      * Acts like a universal search. It will return questions that can be related to the search term.
      */
     @GetMapping("questions")
     //Mono<List<Question>> getQuestionsBySearchQuery(@RequestParam("search") String searchQuery, CollectionOptions options);
-    Mono<List<QuestionRepresentation>> getQuestionsBySearchQuery(@RequestParam("search") String searchQuery);
+    Mono<List<QuestionDocument>> getQuestionsBySearchQuery(@RequestParam("search") String searchQuery);
 
 
     /**
@@ -83,7 +83,7 @@ public interface QuestionResource {
 
     @GetMapping("users/{userId}/questions")
     //Mono<List<Question>> getQuestions(@PathVariable long userId, CollectionOptions options);
-    Mono<List<QuestionRepresentation>> getQuestions(@PathVariable long userId);
+    Mono<List<QuestionDocument>> getQuestions(@PathVariable long userId);
 
     /**
      * Updates the question with the given questionId
@@ -92,7 +92,7 @@ public interface QuestionResource {
      * Requires the invoker to be the creator of the ques..
      */
     @PutMapping("questions/{questionId}")
-    Mono<QuestionRepresentation> updateQuestion(@PathVariable long questionId, QuestionRepresentation questionRepresentation);
+    Mono<QuestionDocument> updateQuestion(@PathVariable long questionId, QuestionDocument questionDocument);
 
     /**
      * Deletes a question. The answers connected to the question will be deleted as well.
@@ -130,5 +130,5 @@ public interface QuestionResource {
      *
      * @return question
      */
-    Mono<QuestionRepresentation> getQuestionById(long questionId);
+    Mono<QuestionDocument> getQuestionById(long questionId);
 }

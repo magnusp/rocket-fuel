@@ -21,7 +21,7 @@ public interface AnswerResource {
      * Creates an answer to a question
      */
     @PostMapping("questions/{questionId}/answers")
-    Mono<AnswerRepresentation> createAnswer(AnswerRepresentation answerRepresentation, @PathVariable long questionId);
+    Mono<AnswerDocument> createAnswer(AnswerDocument answerDocument, @PathVariable long questionId);
 
     /**
      * Returns all answers for a given question
@@ -30,7 +30,7 @@ public interface AnswerResource {
      * @return answers for a question
      */
     @GetMapping("questions/{questionId}/answers")
-    Mono<List<AnswerRepresentation>> getAnswers(@PathVariable long questionId);
+    Mono<List<AnswerDocument>> getAnswers(@PathVariable long questionId);
 
     /**
      * Marks a given answer as answered. The method will mark the question as well as answered.
@@ -48,11 +48,11 @@ public interface AnswerResource {
      * Only title and answer can be answered.
      *
      * @param answerId the answers unique id
-     * @param answerRepresentation the new state of the answer
+     * @param answerDocument the new state of the answer
      * @return nothing
      */
     @PutMapping("answers/{answerId}")
-    Mono<Void> updateAnswer(@PathVariable long answerId, @RequestBody AnswerRepresentation answerRepresentation);
+    Mono<Void> updateAnswer(@PathVariable long answerId, @RequestBody AnswerDocument answerDocument);
 
     /**
      * Deletes an answer

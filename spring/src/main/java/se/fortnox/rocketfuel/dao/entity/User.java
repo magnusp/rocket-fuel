@@ -7,7 +7,11 @@ public class User {
     Long id;
     String email;
     String name;
+    Long coins;
     String picture;
+
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -31,6 +35,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getCoins() {
+        return coins;
+    }
+
+    public void setCoins(Long coins) {
+        this.coins = coins;
     }
 
     public String getPicture() {

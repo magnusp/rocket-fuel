@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.http.server.reactive.MockServerHttpResponse;
 import org.springframework.test.context.ContextConfiguration;
-import se.fortnox.rocketfuel.api.QuestionRepresentation;
+import se.fortnox.rocketfuel.api.QuestionDocument;
 import se.fortnox.rocketfuel.api.QuestionResource;
 
 @SpringBootTest
@@ -23,16 +23,16 @@ class RocketFuelApplicationTests {
     void contextLoads() {
         System.out.println("Context loaded");
         MockServerHttpResponse response = new MockServerHttpResponse();
-        QuestionRepresentation questionRepresentation = new QuestionRepresentation();
-        questionRepresentation.setTitle("Hej");
-        questionRepresentation.setQuestion("Question");
+        QuestionDocument questionDocument = new QuestionDocument();
+        questionDocument.setTitle("Hej");
+        questionDocument.setQuestion("Question");
 
-        questionResource.createQuestion(questionRepresentation, response)
+        questionResource.createQuestion(questionDocument, response)
             .doOnSuccess(aVoid -> {
                 System.out.println("Created");
             })
             .block();
-        QuestionRepresentation block = questionResource.getQuestion(1)
+        QuestionDocument block = questionResource.getQuestion(1)
             .block();
         System.out.println(block);
     }
