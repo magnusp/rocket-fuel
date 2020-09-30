@@ -7,12 +7,12 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import se.fortnox.rocketfuel.api.UserDocument;
 import se.fortnox.rocketfuel.api.UserResource;
@@ -54,46 +54,40 @@ public class UserController implements UserResource {
     }
 
     @Override
-    public Mono<UserDocument> signIn(ServerWebExchange exchange) {
+    public Mono<UserDocument> signIn(JwtAuthenticationToken authenticationToken, ServerHttpResponse serverHttpResponse) {
+        Jwt token = authenticationToken.getToken();
+        String email = token.getClaimAsString("email");
+        return userRepository.findByEmail(email)
+            .switchIfEmpty(Mono.defer(() -> {
+                String name = token.getClaimAsString("name");
+                String picture = token.getClaimAsString("picture");
+                User user = new User();
+                user.setName(name);
+                user.setPicture(picture);
+                user.setEmail(email);
+                return userRepository.save(user.getEmail(), user.getName(), user.getPicture());
+            }))
+            .flatMap(user -> {
+                try {
+                    String applicationToken = buildApplicationToken(user.getName(), user.getEmail(), user.getId(), user.getPicture());
+                    ResponseCookie responseCookie = ResponseCookie
+                        .from("applicationToken", applicationToken)
+                        .path("/")
+                        .build();
 
-        return ReactiveSecurityContextHolder
-            .getContext()
-            .flatMap(securityContext -> {
-                JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) securityContext.getAuthentication();
-                Jwt jwt = (Jwt) jwtAuthenticationToken.getPrincipal();
-                String email = jwt.getClaimAsString("email");
+                    UserDocument userDocument = new UserDocument();
+                    userDocument.setId(user.getId());
+                    userDocument.setName(user.getName());
+                    userDocument.setEmail(user.getEmail());
+                    userDocument.setPicture(user.getPicture());
+                    userDocument.setCoins(user.getCoins());
 
-                return userRepository.findByEmail(email)
-                    .switchIfEmpty(Mono.defer(() -> {
-                        String name = jwt.getClaimAsString("name");
-                        String picture = jwt.getClaimAsString("picture");
-                        User user = new User();
-                        user.setName(name);
-                        user.setPicture(picture);
-                        user.setEmail(email);
-                        return userRepository.save(user.getEmail(), user.getName(), user.getPicture());
-                    })).flatMap(user -> {
-                        try {
-                            String applicationToken = buildApplicationToken(user.getName(), user.getEmail(), user.getId(), user.getPicture());
-                            ResponseCookie responseCookie = ResponseCookie
-                                .from("applicationToken", applicationToken)
-                                .path("/")
-                                .build();
-                            exchange.getResponse().beforeCommit(() -> {
-                                exchange.getResponse().addCookie(responseCookie);
-                                return Mono.empty();
-                            });
-                            UserDocument userDocument = new UserDocument();
-                            userDocument.setId(user.getId());
-                            userDocument.setName(user.getName());
-                            userDocument.setEmail(user.getEmail());
-                            userDocument.setPicture(user.getPicture());
-                            userDocument.setCoins(user.getCoins());
-                            return Mono.just(userDocument);
-                        } catch (JOSEException e) {
-                            return Mono.error(new RuntimeException(e));
-                        }
-                    });
+                    serverHttpResponse.getHeaders().add(HttpHeaders.SET_COOKIE, responseCookie.toString());
+
+                    return Mono.just(userDocument);
+                } catch (JOSEException e) {
+                    return Mono.error(new RuntimeException(e));
+                }
             });
     }
 

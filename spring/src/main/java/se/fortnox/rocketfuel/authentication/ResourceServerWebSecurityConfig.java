@@ -42,7 +42,7 @@ public class ResourceServerWebSecurityConfig {
         return manager;
     }
 
-    @Bean
+    //@Bean
     ReactiveJwtDecoder jwtDecoder() {
         NimbusReactiveJwtDecoder jwtDecoder = (NimbusReactiveJwtDecoder)
             ReactiveJwtDecoders.fromIssuerLocation("https://accounts.google.com");

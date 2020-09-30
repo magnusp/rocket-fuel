@@ -44,7 +44,7 @@ public class StatelessWebSessionManager implements WebSessionManager {
     private Mono<WebSession> createWebSession() {
 
         // Opportunity to clean expired sessions
-        Instant now = this.clock.instant();
+            Instant now = this.clock.instant();
 
         return Mono.fromSupplier(() -> new StatelessWebSession(now))
             .subscribeOn(Schedulers.boundedElastic())
