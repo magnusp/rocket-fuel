@@ -2,6 +2,7 @@
 
  import org.springframework.http.server.reactive.ServerHttpResponse;
  import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+ import org.springframework.web.bind.annotation.CookieValue;
  import org.springframework.web.bind.annotation.DeleteMapping;
  import org.springframework.web.bind.annotation.GetMapping;
  import org.springframework.web.bind.annotation.PathVariable;
@@ -66,7 +67,8 @@
       * Set-Cookie header is used to perform the action.
       *
       * @return the userId
+      * @param serverHttpResponse
       */
      @DeleteMapping("authenticate")
-     Mono<Long> signOut();
+     Mono<Long> signOut(@CookieValue String applicationToken, ServerHttpResponse serverHttpResponse);
  }

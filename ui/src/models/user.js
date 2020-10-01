@@ -22,7 +22,7 @@ export function signIn(token) {
 
 export function signOut() {
     const options = {
-        url: '/api/users/authenticate/',
+        url: '/api/users/authenticate',
         method: 'DELETE'
     };
 

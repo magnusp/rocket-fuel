@@ -2,7 +2,8 @@ package se.fortnox.rocketfuel.authentication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -11,18 +12,21 @@ import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
+import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import reactor.core.publisher.Mono;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +79,10 @@ public class ResourceServerWebSecurityConfig {
             .csrf().disable()
             .logout().disable()
             .authorizeExchange()
+            .pathMatchers(HttpMethod.DELETE,"/api/users/authenticate")
+            .permitAll()
+            .and()
+            .authorizeExchange()
             .anyExchange()
             .authenticated()
             .and()
@@ -92,11 +100,23 @@ public class ResourceServerWebSecurityConfig {
             .formLogin().disable()
             .csrf().disable()
             .logout().disable()
-
-
-            .securityContextRepository(new WebSessionServerSecurityContextRepository())
-            .authenticationManager(authentication -> {
-                return Mono.just(new UsernamePasswordAuthenticationToken("alice", "some-credential"));
+            .oauth2ResourceServer(oAuth2ResourceServerSpec -> {
+                oAuth2ResourceServerSpec
+                    .jwt(jwtSpec -> {
+                        byte[] sharedSecret = "a really long secret quzbar a really long secret quzbar a really long secret quzbar".getBytes(StandardCharsets.UTF_8);
+                        SecretKeySpec secretKey = new SecretKeySpec(sharedSecret, "HmacSHA256");
+                        var decoder = NimbusReactiveJwtDecoder.withSecretKey(secretKey)
+                            .macAlgorithm(MacAlgorithm.HS256)
+                            .build();
+                        jwtSpec.jwtDecoder(decoder);
+                    })
+                .bearerTokenConverter(exchange -> {
+                        HttpCookie applicationToken = exchange.getRequest().getCookies().getFirst("applicationToken");
+                        if(applicationToken == null) {
+                            return Mono.error(new RuntimeException("No applicationToken"));
+                        }
+                        return Mono.just(new BearerTokenAuthenticationToken(applicationToken.getValue()));
+                });
             })
             .authorizeExchange()
             .anyExchange()

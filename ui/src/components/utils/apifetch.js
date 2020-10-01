@@ -34,7 +34,6 @@ function ApiFetch(options = {}, tryCount = 0) {
     return fetch(options.url, fetchOptions)
         .then((response) => {
             if (!response.ok && response.status === 401) {
-                console.log('401');
                 if (tryCount < RETRIES) {
                     return AuthWithGoogle().then(() => {
                         return ApiFetch(options, tryCount+1);

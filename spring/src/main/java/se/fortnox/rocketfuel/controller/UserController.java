@@ -12,6 +12,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import se.fortnox.rocketfuel.api.UserDocument;
@@ -92,8 +93,14 @@ public class UserController implements UserResource {
     }
 
     @Override
-    public Mono<Long> signOut() {
-        return Mono.error(new UnsupportedOperationException());
+    public Mono<Long> signOut(@CookieValue String applicationToken, ServerHttpResponse serverHttpResponse) {
+        ResponseCookie responseCookie = ResponseCookie
+            .from("applicationToken", applicationToken)
+            .path("/")
+            .maxAge(0L)
+            .build();
+        serverHttpResponse.getHeaders().add(HttpHeaders.SET_COOKIE, responseCookie.toString());
+        return Mono.just(-1L); // TODO: Return user id of signed out user (?)
     }
 
     private String buildApplicationToken(String name, String email, Long useridFromRocketFuel, String picture) throws JOSEException {
