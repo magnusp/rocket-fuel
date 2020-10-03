@@ -7,6 +7,9 @@ import org.springframework.mock.http.server.reactive.MockServerHttpResponse;
 import org.springframework.test.context.ContextConfiguration;
 import se.fortnox.rocketfuel.api.QuestionDocument;
 import se.fortnox.rocketfuel.api.QuestionResource;
+import se.fortnox.rocketfuel.authentication.Auth;
+
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @ContextConfiguration(initializers = {TestInitializer.class})
@@ -27,7 +30,7 @@ class RocketFuelApplicationTests {
         questionDocument.setTitle("Hej");
         questionDocument.setQuestion("Question");
 
-        questionResource.createQuestion(questionDocument, response)
+        questionResource.createQuestion(mock(Auth.class), questionDocument, response)
             .doOnSuccess(aVoid -> {
                 System.out.println("Created");
             })

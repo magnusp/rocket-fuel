@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import se.fortnox.rocketfuel.api.QuestionDocument;
 import se.fortnox.rocketfuel.api.QuestionResource;
+import se.fortnox.rocketfuel.authentication.Auth;
 import se.fortnox.rocketfuel.dao.QuestionRepository;
 import se.fortnox.rocketfuel.dao.QuestionVotesRepository;
 import se.fortnox.rocketfuel.dao.UserRepository;
@@ -97,7 +98,7 @@ public class QuestionController implements QuestionResource {
     }
 
     @Override
-    public Mono<Void> createQuestion(QuestionDocument questionDocument, ServerHttpResponse response) {
+    public Mono<Void> createQuestion(Auth auth, QuestionDocument questionDocument, ServerHttpResponse response) {
         se.fortnox.rocketfuel.dao.entity.Question questionEntity = new se.fortnox.rocketfuel.dao.entity.Question();
         questionEntity.setCreatedAt(OffsetDateTime.now());
         questionEntity.setQuestion(questionDocument.getQuestion());
