@@ -100,6 +100,7 @@ public class QuestionController implements QuestionResource {
     @Override
     public Mono<Void> createQuestion(Auth auth, QuestionDocument questionDocument, ServerHttpResponse response) {
         se.fortnox.rocketfuel.dao.entity.Question questionEntity = new se.fortnox.rocketfuel.dao.entity.Question();
+        questionEntity.setUserId(auth.getId());
         questionEntity.setCreatedAt(OffsetDateTime.now());
         questionEntity.setQuestion(questionDocument.getQuestion());
         questionEntity.setTitle(questionDocument.getTitle());

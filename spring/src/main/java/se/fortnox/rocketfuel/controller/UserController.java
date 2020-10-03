@@ -124,7 +124,7 @@ public class UserController implements UserResource {
 
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
-        // Apply the HMAC protection
+        // Apply the HMAC signature
         signedJWT.sign(signer);
 
         // Serialize to compact form, produces something like

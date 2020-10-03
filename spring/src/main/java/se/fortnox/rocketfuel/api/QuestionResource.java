@@ -1,7 +1,6 @@
 package se.fortnox.rocketfuel.api;
 
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,7 +68,7 @@ public interface QuestionResource {
      * @param doc
      */
     @PostMapping("questions")
-    public Mono<Void>createQuestion(@AuthenticationPrincipal Auth auth, @RequestBody QuestionDocument questionDocument, ServerHttpResponse response);
+    public Mono<Void>createQuestion(Auth auth, @RequestBody QuestionDocument questionDocument, ServerHttpResponse response);
 
     /**
      * Acts like a universal search. It will return questions that can be related to the search term.
