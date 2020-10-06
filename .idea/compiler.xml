@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="rocket-fuel-ui" />
         <module name="rocket-fuel-report" />
         <module name="rocket-fuel-spring" />
-        <module name="rocket-fuel-ui" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,7 +17,7 @@
       <module name="rocket-fuel-impl" target="1.8" />
       <module name="rocket-fuel-report" target="1.8" />
       <module name="rocket-fuel-spec" target="1.8" />
-      <module name="rocket-fuel-spring" target="11" />
+      <module name="rocket-fuel-spring" target="10" />
       <module name="rocket-fuel-ui" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -27,8 +27,8 @@
       <module name="rocket-fuel-impl" options="-parameters" />
       <module name="rocket-fuel-report" options="-parameters" />
       <module name="rocket-fuel-spec" options="-parameters" />
-      <module name="rocket-fuel-spring" options="-parameters" />
-      <module name="rocket-fuel-ui" options="-parameters" />
+      <module name="rocket-fuel-spring" options="-parameters -parameters" />
+      <module name="rocket-fuel-ui" options="-parameters -parameters" />
     </option>
   </component>
 </project>

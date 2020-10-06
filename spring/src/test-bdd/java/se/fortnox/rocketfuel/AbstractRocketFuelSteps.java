@@ -1,7 +1,6 @@
 package se.fortnox.rocketfuel;
 
 import io.r2dbc.spi.ConnectionFactory;
-import org.jbehave.core.annotations.Given;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +9,8 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
 import org.springframework.data.r2dbc.mapping.R2dbcMappingContext;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
-import org.springframework.stereotype.Component;
 import se.fortnox.rocketfuel.controller.AnswerController;
+import se.fortnox.rocketfuel.controller.QuestionController;
 import se.fortnox.rocketfuel.dao.AnswerRepository;
 import se.fortnox.rocketfuel.dao.QuestionRepository;
 import se.fortnox.rocketfuel.dao.QuestionVotesRepository;
@@ -19,8 +18,7 @@ import se.fortnox.rocketfuel.dao.UserRepository;
 
 import static org.mockito.Mockito.mock;
 
-@Component
-public class TestSteps {
+public class AbstractRocketFuelSteps {
     @MockBean
     AnswerRepository answerRepository;
 
@@ -56,8 +54,6 @@ public class TestSteps {
     @Autowired
     AnswerController answerController;
 
-    @Given("that something")
-    public void givenThatSomething() {
-        int i = 0;
-    }
+    @Autowired
+    QuestionController questionController;
 }
